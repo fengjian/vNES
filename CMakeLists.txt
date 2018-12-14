@@ -28,8 +28,8 @@ if(APPLE)
 endif()
 
 
-file(GLOB_RECURSE nes_src src/*.cpp)
-add_executable(vNES ${nes_src})
+file(GLOB_RECURSE SRC src/*.cpp)
+add_executable(vNES ${SRC})
 
 
 CHECK_CXX_COMPILER_FLAG("-std=c++11" HAS_CXX11)
@@ -49,8 +49,8 @@ include(InstallRequiredSystemLibraries)
 set(CPACK_SOURCE_IGNORE_FILES "${SourceIgnoreFiles}")
 set(FMESH_VERSION_MAJOR 1)
 set(FMESH_VERSION_MINOR 0)
-set(CPACK_PACKAGE_VERSION_MAJOR "${FMESH_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${FMESH_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_MAJOR "${vNES_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${vNES_VERSION_MINOR}")
 if(APPLE)
   set(CPACK_BUNDLE_NAME "vNES")
   #todo
