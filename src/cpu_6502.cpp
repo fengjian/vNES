@@ -35,27 +35,27 @@ namespace nes {
     
     void cpu_emulator::immediate_addressing()
     {
-        this->op_val = this->mem.read<uint8_t>(this->reg.PC + 1);
+        this->op_val_ = this->mem_.read<uint8_t>(this->reg_.PC + 1);
     }
     
     void cpu_emulator::zero_page_addressing()
     {
-        this->op_address = this->mem.read<uint8_t>(this->reg.PC + 1);
-        this->op_val = this->mem.read<uint8_t>(op_address);
+        this->op_address_ = this->mem_.read<uint8_t>(this->reg_.PC + 1);
+        this->op_val_ = this->mem_.read<uint8_t>(op_address_);
     }
     
     void cpu_emulator::zero_page_x_addressing()
     {
-        uint16_t addr = this->mem.read<uint8_t>(this->reg.PC + 1) + this->reg.X;
-        this->op_address = addr & 0xff;
-        this->op_val = this->mem.read<uint8_t>(op_address);
+        uint16_t addr = this->mem_.read<uint8_t>(this->reg_.PC + 1) + this->reg_.X;
+        this->op_address_ = addr & 0xff;
+        this->op_val_ = this->mem_.read<uint8_t>(op_address_);
     }
     
     void cpu_emulator::zero_page_y_addressing()
     {
-        uint16_t addr = this->mem.read<uint8_t>(this->reg.PC + 1) + this->reg.Y;
-        this->op_address = addr & 0xff;
-        this->op_val = this->mem.read<uint8_t>(op_address);
+        uint16_t addr = this->mem_.read<uint8_t>(this->reg_.PC + 1) + this->reg_.Y;
+        this->op_address_ = addr & 0xff;
+        this->op_val_ = this->mem_.read<uint8_t>(op_address_);
     }
     
     void cpu_emulator::relative_addressing()
@@ -65,39 +65,39 @@ namespace nes {
     
     void cpu_emulator::absolute_addressing()
     {
-        this->op_address = this->mem.read<uint16_t>(this->reg.PC + 1);
-        this->op_val = this->mem.read<uint8_t>(op_address);
+        this->op_address_ = this->mem_.read<uint16_t>(this->reg_.PC + 1);
+        this->op_val_ = this->mem_.read<uint8_t>(op_address_);
     }
     
     void cpu_emulator::absolute_x_addressing()
     {
-        this->op_address = this->mem.read<uint16_t>(this->reg.PC + 1) + this->reg.X;
-        this->op_val = this->mem.read<uint8_t>(op_address);
+        this->op_address_ = this->mem_.read<uint16_t>(this->reg_.PC + 1) + this->reg_.X;
+        this->op_val_ = this->mem_.read<uint8_t>(op_address_);
     }
     
     void cpu_emulator::absolute_y_addressing()
     {
-        this->op_address = this->mem.read<uint16_t>(this->reg.PC + 1) + this->reg.Y;
-        this->op_val = this->mem.read<uint8_t>(op_address);
+        this->op_address_ = this->mem_.read<uint16_t>(this->reg_.PC + 1) + this->reg_.Y;
+        this->op_val_ = this->mem_.read<uint8_t>(op_address_);
     }
     
     void cpu_emulator::indirect_addressing()
     {
-        this->op_address = this->mem.read<uint16_t>(this->mem.read<uint16_t>(this->reg.PC + 1));
+        this->op_address_ = this->mem_.read<uint16_t>(this->mem_.read<uint16_t>(this->reg_.PC + 1));
     }
     
     void cpu_emulator::indirect_x_addressing()
     {
-        uint8_t t = this->mem.read<uint8_t>(this->reg.PC + 1) + this->reg.X;
-        uint16_t addr = this->mem.read<uint16_t>(t);
-        this->op_val = this->mem.read<uint8_t>(addr);
+        uint8_t t = this->mem_.read<uint8_t>(this->reg_.PC + 1) + this->reg_.X;
+        uint16_t addr = this->mem_.read<uint16_t>(t);
+        this->op_val_ = this->mem_.read<uint8_t>(addr);
     }
     
     void cpu_emulator::indirect_y_addressing()
     {
-        uint8_t t = this->mem.read<uint8_t>(this->reg.PC + 1) + this->reg.Y;
-        uint16_t addr = this->mem.read<uint16_t>(t);
-        this->op_val = this->mem.read<uint8_t>(addr);
+        uint8_t t = this->mem_.read<uint8_t>(this->reg_.PC + 1) + this->reg_.Y;
+        uint16_t addr = this->mem_.read<uint16_t>(t);
+        this->op_val_ = this->mem_.read<uint8_t>(addr);
     }
     
     void cpu_emulator::BRK()
@@ -107,69 +107,68 @@ namespace nes {
 
     void cpu_emulator::TAX()
     {
-        this->reg.X = this->reg.A;
-        this->set_nzf(this->reg.X);
+        this->reg_.X = this->reg_.A;
+        this->set_nzf(this->reg_.X);
     }
     
     void cpu_emulator::TAY()
     {
-        this->reg.Y = this->reg.A;
-        this->set_nzf(this->reg.Y);
+        this->reg_.Y = this->reg_.A;
+        this->set_nzf(this->reg_.Y);
     }
     
     void cpu_emulator::TXA()
     {
-        this->reg.A = this->reg.X;
-        this->set_nzf(this->reg.A);
+        this->reg_.A = this->reg_.X;
+        this->set_nzf(this->reg_.A);
     }
     
     void cpu_emulator::TYA()
     {
-        this->reg.A = this->reg.Y;
-        this->set_nzf(this->reg.A);
+        this->reg_.A = this->reg_.Y;
+        this->set_nzf(this->reg_.A);
     }
     
     void cpu_emulator::TSX()
     {
-        this->reg.X = this->reg.SP;
-        this->set_nzf(this->reg.X);
+        this->reg_.X = this->reg_.SP;
+        this->set_nzf(this->reg_.X);
     }
     
     void cpu_emulator::TXS()
     {
-        this->reg.SP = this->reg.X;
-        this->set_nzf(this->reg.SP);
+        this->reg_.SP = this->reg_.X;
+        this->set_nzf(this->reg_.SP);
     }
     
     void cpu_emulator::INX()
     {
-        this->reg.X += 1;
-        this->set_nzf(this->reg.X);
+        this->reg_.X += 1;
+        this->set_nzf(this->reg_.X);
     }
     
     void cpu_emulator::ADC()
     {
-        this->reg.A += this->op_val;
-        this->set_nzf(this->reg.A);
+        this->reg_.A += this->op_val_;
+        this->set_nzf(this->reg_.A);
     }
 
     void cpu_emulator::LDA()
     {
-        this->reg.A = this->op_val;
-        this->set_nzf(this->reg.A);
+        this->reg_.A = this->op_val_;
+        this->set_nzf(this->reg_.A);
     }
     
     void cpu_emulator::STA()
     {
-        this->mem.write(this->reg.A, this->op_address);
+        this->mem_.write(this->reg_.A, this->op_address_);
     }
     
     void cpu_emulator::load_code_segment(uint16_t segment_base_addr, const uint8_t *buf, size_t size)
     {
-        uint8_t *ptr = this->mem.map_offset_addr(segment_base_addr);
+        uint8_t *ptr = this->mem_.map_offset_addr(segment_base_addr);
         memcpy(ptr, buf, size);
-        this->code_segment_offset.start = segment_base_addr;
-        this->code_segment_offset.end = segment_base_addr + size;
+        this->mem_.set_code_segment_offset(segment_base_addr, segment_base_addr + size);
     }
     
 
@@ -178,7 +177,7 @@ namespace nes {
         std::cout << "------------------------" << std::endl
                   << "[DEBUG reg]" << std::endl
                   << "------------------------" << std::endl
-                  << this->reg << std::endl;
+                  << this->reg_ << std::endl;
     }
     
     
@@ -186,7 +185,7 @@ namespace nes {
     {
 
         uint8_t opsize = 0;
-        uint8_t opcode = this->mem.read<uint8_t>(this->reg.PC);
+        uint8_t opcode = this->mem_.read<uint8_t>(this->reg_.PC);
         
         switch (opcode) {
             case 0xa9:
@@ -225,7 +224,7 @@ namespace nes {
                 
             default:
                 std::cout << "error instruction: " << opcode << std::endl;
-                return ERROR_UNKNOWO_INSTRUCTION;
+                return ERROR_UNKNOWN_INSTRUCTION;
                 break;
         }
         
@@ -238,9 +237,9 @@ namespace nes {
     
         uint8_t opsize = 1;
 
-        while (this->reg.PC < this->code_segment_offset.end && opsize > 0) {
+        while (this->reg_.PC < this->mem_.get_code_segment_offset().end && opsize > 0) {
             opsize = this->eval();
-            this->reg.PC += opsize;
+            this->reg_.PC += opsize;
         }
     }
 
@@ -248,19 +247,19 @@ namespace nes {
     
     void cpu_emulator::reset_reg()
     {
-        this->reg.PC = this->code_segment_offset.start;
-        this->reg.SP = this->mem.stack_offset.start & 0xff; //low addr
+        this->reg_.PC = this->mem_.get_code_segment_offset().start;
+        this->reg_.SP = this->mem_.get_stack_offset().start & 0xff; //low addr
 
-        memset(&this->reg.P, 0, sizeof(this->reg.P));
-        this->reg.A = 0;
-        this->reg.X = 0;
-        this->reg.Y = 0;
-        this->reg.P.break_command = 1;
+        memset(&this->reg_.P, 0, sizeof(this->reg_.P));
+        this->reg_.A = 0;
+        this->reg_.X = 0;
+        this->reg_.Y = 0;
+        this->reg_.P.break_command = 1;
     }
     
     void cpu_emulator::reset_mem()
     {
-        this->mem.bzero();
+        this->mem_.bzero();
     }
 
     
@@ -287,15 +286,15 @@ namespace nes {
         
         this->load_code_segment(0, code1, sizeof(code1));
         this->run();
-        assert(this->reg.A == 0x08);
-        assert(this->reg.X == 0x00);
-        assert(this->reg.Y == 0x00);
-        assert(this->reg.SP == 0xff);
-        assert(this->reg.PC == 0x0f);
+        assert(this->reg_.A == 0x08);
+        assert(this->reg_.X == 0x00);
+        assert(this->reg_.Y == 0x00);
+        assert(this->reg_.SP == 0xff);
+        assert(this->reg_.PC == 0x0f);
         
         
         this->debug_print_reg();
-        this->mem.debug_dump_ram();
+        this->mem_.debug_dump_ram();
         
         this->reset_mem();
         this->reset_reg();
@@ -304,7 +303,7 @@ namespace nes {
         this->run();
         
         this->debug_print_reg();
-        this->mem.debug_dump_ram();
+        this->mem_.debug_dump_ram();
         
         
     }

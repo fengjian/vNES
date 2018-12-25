@@ -12,7 +12,7 @@
 template<typename T, typename T2>
 static inline T get_bit(T bit, T2 n)
 {
-    return bit >> n & 0x01;
+    return bit >> n & 0x1;
 }
 
 
@@ -45,6 +45,13 @@ static inline std::string to_binary_string(const T& x)
     std::stringstream ss;
     ss << std::bitset<sizeof(T) * 8>(x);
     return ss.str();
+}
+
+
+template<typename T, size_t len>
+size_t arr_len(T(&)[len])
+{
+    return len;
 }
 
 

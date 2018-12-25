@@ -13,21 +13,23 @@
 #include "memory.hpp"
 
 
+
+#define ERROR_UNKNOWN_INSTRUCTION -1
+
+
+
 namespace nes {
     
-    
-#define ERROR_UNKNOWO_INSTRUCTION -10
-    
     struct instruction_info {
-        std::string asm_name = "UNKNDOW";
-        uint8_t len = 0;
+        std::string asm_name{"UNKNOWN"};
+        uint8_t len{0};
     };
 
     
     struct registers {
-        uint8_t A = 0;
-        uint8_t X = 0;
-        uint8_t Y = 0;
+        uint8_t A{0};
+        uint8_t X{0};
+        uint8_t Y{0};
         
         struct {
             uint8_t carry_flag : 1;
@@ -37,6 +39,7 @@ namespace nes {
             uint8_t break_command : 1;
             uint8_t overflow_flag : 1;
             uint8_t negative_flag : 1;
+
             operator uint8_t() const
             {
                 return this->negative_flag << 7
@@ -49,49 +52,26 @@ namespace nes {
                 ;
             }
             
-        } P = {0};
+        } P{0};
         
         
-        uint8_t SP = 0;
-        uint16_t PC = 0;
+        uint8_t SP{0};
+        uint16_t PC{0};
     };
     
     std::ostream& operator<<(std::ostream& os, const registers& r);
     
     
     class cpu_emulator {
-        struct {
-            uint16_t start = 0x00;
-            uint16_t end = 0x00;            
-        } code_segment_offset;
 
-        registers reg;
-        memory& mem;
+        registers reg_;
+        memory& mem_;
         
         
-        template<typename T>
-        void set_nf(T n)
-        {
-            this->reg.P.negative_flag = get_bit(n, sizeof(T) * 8 - 1);
-        }
-        
-        template<typename T>
-        void set_zf(T n)
-        {
-            this->reg.P.zero_flag = n == 0 ? 1 : 0;
-        }
-        
-        template<typename T>
-        void set_nzf(T n)
-        {
-            this->set_nf(n);
-            this->set_zf(n);
-        }
+        uint8_t op_val_{0};
+        uint16_t op_address_{0};
         
         // addressing modes
-        
-        uint8_t op_val = 0;
-        uint16_t op_address = 0;
         
         void implied_addressing();
         void accumulator_addressing();
@@ -124,6 +104,25 @@ namespace nes {
         void ADC();
         void BRK();
         
+        template<typename T>
+        void set_nf(T n)
+        {
+            this->reg_.P.negative_flag = get_bit(n, sizeof(T) * 8 - 1);
+        }
+        
+        template<typename T>
+        void set_zf(T n)
+        {
+            this->reg_.P.zero_flag = n == 0 ? 1 : 0;
+        }
+        
+        template<typename T>
+        void set_nzf(T n)
+        {
+            this->set_nf(n);
+            this->set_zf(n);
+        }
+        
     public:
         cpu_emulator() = delete;
         cpu_emulator(const cpu_emulator&) = delete;
@@ -133,7 +132,7 @@ namespace nes {
 
         
         cpu_emulator(memory& m) noexcept
-        :mem(m)
+        :mem_(m)
         {
         }
         

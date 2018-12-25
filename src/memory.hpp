@@ -15,20 +15,40 @@
 
 namespace nes {
     
+    struct address_offset {
+        uint16_t start;
+        uint16_t end;
+    };
+    
+    
     class memory {
         
-        uint8_t internal_ram_addr_space[NES_MAX_RAM] = {0};
+        uint8_t internal_ram_addr_space_[NES_MAX_RAM]{0};
         
+        address_offset stack_offset_{0x1ff, 0x100};
+        address_offset code_segment_offset_{0x00, 0x00};
+
     public:
-        struct {
-            uint16_t start = 0x1FF;
-            uint16_t end = 0x100;
-        } stack_offset;
+        const address_offset& get_code_segment_offset() const
+        {
+            return this->code_segment_offset_;
+        }
+        
+        void set_code_segment_offset(uint16_t start, uint16_t end)
+        {
+            this->code_segment_offset_.start = start;
+            this->code_segment_offset_.end = end;
+        }
+
+        const address_offset& get_stack_offset() const
+        {
+            return this->stack_offset_;
+        }
         
         uint8_t* map_offset_addr(uint16_t offset)
         {
             //TODO
-            return this->internal_ram_addr_space + offset;
+            return this->internal_ram_addr_space_ + offset;
         }
     
         template<typename T, typename T2>

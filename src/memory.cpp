@@ -9,18 +9,18 @@ namespace nes {
     {
         uint8_t bw = 4;
         std::string line(row*bw + 8, '-');
-        size_t size = sizeof(this->internal_ram_addr_space);
+        size_t len = arr_len(this->internal_ram_addr_space_);
 
         std::cout << line << std::endl
                   << "[DEBUG dump ram]" << std::endl
                   << line << std::endl;
         
-        for (int i = 0; i < size/row; ++i) {
+        for (int i = 0; i < len/row; ++i) {
             size_t off = i * row;
             
             std::cout << '|' << std::setw(bw) << std::hex << off << ": " ;
             for (int j = 0; j < row; ++j) {
-                std::cout << std::setw(bw) << std::hex << this->internal_ram_addr_space[off + j];
+                std::cout << std::setw(bw) << std::hex << this->internal_ram_addr_space_[off + j];
             }
             
             std::cout << '|' <<  std::endl;
@@ -31,7 +31,7 @@ namespace nes {
     
     void memory::bzero()
     {
-        memset(this->internal_ram_addr_space, 0, sizeof(this->internal_ram_addr_space));
+        memset(this->internal_ram_addr_space_, 0, arr_len(this->internal_ram_addr_space_));
     }
 
 
