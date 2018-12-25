@@ -21,15 +21,15 @@
 namespace nes {
     
     struct instruction_info {
-        std::string asm_name{"UNKNOWN"};
-        uint8_t len{0};
+        std::string asm_name;
+        uint8_t len;
     };
 
     
     struct registers {
-        uint8_t A{0};
-        uint8_t X{0};
-        uint8_t Y{0};
+        uint8_t A;
+        uint8_t X;
+        uint8_t Y;
         
         struct {
             uint8_t carry_flag : 1;
@@ -52,11 +52,10 @@ namespace nes {
                 ;
             }
             
-        } P{0};
+        } P;
         
-        
-        uint8_t SP{0};
-        uint16_t PC{0};
+        uint8_t SP;
+        uint16_t PC;
     };
     
     std::ostream& operator<<(std::ostream& os, const registers& r);
@@ -64,7 +63,7 @@ namespace nes {
     
     class cpu_emulator {
 
-        registers reg_;
+        registers reg_{0};
         memory& mem_;
         
         
