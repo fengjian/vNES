@@ -32,11 +32,6 @@ file(GLOB_RECURSE SRC src/*.cpp)
 add_executable(vNES ${SRC})
 
 
-CHECK_CXX_COMPILER_FLAG("-std=c++11" HAS_CXX11)
-if(NOT HAS_CXX11)
-  message("cxx11 no find")
-endif()
-
 
 file(GLOB SourceIgnoreFiles "${CMAKE_SOURCE_DIR}/*")
 set(SourceKeepFiles "${CMAKE_SOURCE_DIR}/src"
