@@ -61,7 +61,7 @@ namespace nes {
     std::ostream& operator<<(std::ostream& os, const registers& r);
     
     
-    class cpu_emulator {
+    class cpu_6502 {
 
         registers reg_{0};
         memory& mem_;
@@ -123,14 +123,14 @@ namespace nes {
         }
         
     public:
-        cpu_emulator() = delete;
-        cpu_emulator(const cpu_emulator&) = delete;
-        cpu_emulator(cpu_emulator&&) = delete;
-        cpu_emulator& operator=(const cpu_emulator&) = delete;
-        cpu_emulator& operator=(cpu_emulator&&) = delete;
+        cpu_6502() = delete;
+        cpu_6502(const cpu_6502&) = delete;
+        cpu_6502(cpu_6502&&) = delete;
+        cpu_6502& operator=(const cpu_6502&) = delete;
+        cpu_6502& operator=(cpu_6502&&) = delete;
 
         
-        cpu_emulator(memory& m) noexcept
+        cpu_6502(memory& m) noexcept
         :mem_(m)
         {
         }

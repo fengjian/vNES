@@ -12,8 +12,8 @@
 int main(int argc, const char * argv[])
 {
     nes::memory mem;
-    nes::cpu_emulator emulator(mem);
-    emulator.test();
+    nes::cpu_6502 cpu(mem);
+    cpu.test();
     
     return 0;
 }
