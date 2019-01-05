@@ -9,6 +9,7 @@
 #include <cstring>
 #include <iomanip>
 #include <string>
+#include <new>
 #include "nes.hpp"
 #include "utils.hpp"
 
@@ -23,12 +24,24 @@ namespace nes {
     
     class memory {
         
-        uint8_t internal_ram_addr_space_[NES_MAX_RAM]{0};
+		uint8_t *internal_ram_addr_space_{nullptr};
         
         address_offset stack_offset_{0x1ff, 0x100};
         address_offset code_segment_offset_{0x00, 0x00};
 
     public:
+		memory() noexcept :internal_ram_addr_space_(new(std::nothrow) uint8_t[NES_MAX_RAM]())
+		{
+
+		}
+
+		~memory()
+		{
+			if (internal_ram_addr_space_) {
+				delete[] internal_ram_addr_space_;
+			}
+		}
+
         const address_offset& get_code_segment_offset() const
         {
             return this->code_segment_offset_;
@@ -65,6 +78,8 @@ namespace nes {
         }
         
         void bzero();
+
+		void bzero(uint16_t begin, uint16_t end);
         
         void debug_dump_ram(uint8_t row=12) const;
 

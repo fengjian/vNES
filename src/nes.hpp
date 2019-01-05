@@ -2,9 +2,10 @@
 #define nes_h
 
 
-#define NES_MAX_RAM 1024
+#define NES_MAX_RAM 0x10000
 
 #define MEM_DATD_COLOR "\033[36m"
+
 
 namespace nes {
 

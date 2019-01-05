@@ -9,7 +9,7 @@ namespace nes {
     {
         uint8_t bw = 4;
         std::string line(row*bw + 8, '-');
-        size_t len = arr_len(this->internal_ram_addr_space_);
+        size_t len = NES_MAX_RAM;
 
         std::cout << line << std::endl
                   << "[DEBUG dump ram]" << std::endl
@@ -31,8 +31,12 @@ namespace nes {
     
     void memory::bzero()
     {
-        memset(this->internal_ram_addr_space_, 0, arr_len(this->internal_ram_addr_space_));
+        memset(this->internal_ram_addr_space_, 0, NES_MAX_RAM);
     }
 
+	void memory::bzero(uint16_t begin, uint16_t end)
+	{
+		memset(this->internal_ram_addr_space_ + begin, 0, end - begin);
+	}
 
 }

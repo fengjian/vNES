@@ -168,7 +168,7 @@ namespace nes {
     {
         uint8_t *ptr = this->mem_.map_offset_addr(segment_base_addr);
         memcpy(ptr, buf, size);
-        this->mem_.set_code_segment_offset(segment_base_addr, segment_base_addr + size);
+        this->mem_.set_code_segment_offset(segment_base_addr, segment_base_addr + (uint16_t)size);
     }
     
 
@@ -230,6 +230,79 @@ namespace nes {
         
         return opsize;
     }
+
+
+
+
+/*
+	http://wiki.nesdev.com/w/index.php/CPU_power_up_state
+	CPU power up state
+	The following results are from a US (NTSC) NES, original front-loading design, RP2A03G CPU chip, NES-CPU-07 main board revision,
+	manufactured in 1988. The memory values are probably slightly different for each individual NES console.
+	Please note that you should NOT rely on the state of any registers after Power-UP and especially not the stack register and RAM ($0000-$07FF).
+	P = $34[1] (IRQ disabled)[2]
+	A, X, Y = 0
+	S = $FD
+	$4017 = $00 (frame irq enabled)
+	$4015 = $00 (all channels disabled)
+	$4000-$400F = $00 (not sure about $4010-$4013)
+	All 15 bits of noise channel LFSR = $0000[3]. The first time the LFSR is clocked from the all-0s state, it will shift in a 1.
+	Internal memory ($0000-$07FF) has unreliable startup state. Some machines may have consistent RAM contents at power-on, but others do not.
+*/
+
+
+
+	void cpu_6502::toggle_frame_irq(uint8_t state)
+	{
+		this->mem_.write(state, g_frame_irq_state_address);
+	}
+
+	void cpu_6502::toggle_apu(uint8_t state)
+	{
+		this->mem_.write(state, g_apu_state_address);
+	}
+
+
+	void cpu_6502::power_up()
+	{
+		//	P = 00110100
+		this->reg_.P.negative_flag = 0;
+		this->reg_.P.overflow_flag = 0;
+		this->reg_.P.no_effect = 1;
+		this->reg_.P.break_command = 1;
+		this->reg_.P.decimal_mode = 0;
+		this->reg_.P.interrupt_disable = 1;
+		this->reg_.P.zero_flag = 0;
+		this->reg_.P.carry_flag = 0;
+
+		this->reg_.A = 0;
+		this->reg_.X = 0;
+		this->reg_.Y = 0;
+		this->reg_.SP = 0xfd;
+
+		this->toggle_frame_irq();
+		this->toggle_apu();
+
+		this->mem_.bzero(0x4000, 0x400f + 1);
+
+		//TODO init LSFR
+	}
+
+/*
+	http://wiki.nesdev.com/w/index.php/CPU_power_up_state
+	A, X, Y were not affected
+	S was decremented by 3 (but nothing was written to the stack)
+	The I (IRQ disable) flag was set to true (status ORed with $04)
+	The internal memory was unchanged
+	APU mode in $4017 was unchanged
+	APU was silenced ($4015 = 0)
+*/
+	void cpu_6502::reset()
+	{
+		this->reg_.SP -= 3;
+		this->reg_.P.interrupt_disable = 1;
+		this->toggle_apu();
+	}
     
     void cpu_6502::run()
     {
@@ -294,7 +367,7 @@ namespace nes {
         
         
         this->debug_print_reg();
-        this->mem_.debug_dump_ram();
+        //this->mem_.debug_dump_ram();
         
         this->reset_mem();
         this->reset_reg();
@@ -303,7 +376,7 @@ namespace nes {
         this->run();
         
         this->debug_print_reg();
-        this->mem_.debug_dump_ram();
+        //this->mem_.debug_dump_ram();
         
         
     }
