@@ -20,8 +20,6 @@
 
 namespace nes {
     
-
-
     struct instruction_info {
         std::string asm_name;
         uint8_t len;
@@ -32,17 +30,17 @@ namespace nes {
         uint8_t X;
         uint8_t Y;
 /*
-	7  bit  0
-	---- ----
-	NVss DIZC
-	|||| ||||
-	|||| |||+- Carry
-	|||| ||+-- Zero
-	|||| |+--- Interrupt Disable
-	|||| +---- Decimal
-	||++------ No CPU effect, see: the B flag
-	|+-------- Overflow
-	+--------- Negative
+    7 bit 0
+    ---- ----
+    NVss DIZC
+    |||| ||||
+    |||| |||+- Carry
+    |||| ||+-- Zero
+    |||| |+--- Interrupt Disable
+    |||| +---- Decimal
+    ||++------ No CPU effect, see: the B flag
+    |+-------- Overflow
+    +--------- Negative
 */
         struct {
             uint8_t carry_flag : 1;
@@ -50,7 +48,7 @@ namespace nes {
             uint8_t interrupt_disable : 1;
             uint8_t decimal_mode : 1;
             uint8_t break_command : 1;
-			uint8_t no_effect : 1;
+            uint8_t no_effect : 1;
             uint8_t overflow_flag : 1;
             uint8_t negative_flag : 1;
 
@@ -58,7 +56,7 @@ namespace nes {
             {
                 return this->negative_flag << 7
                 | this->overflow_flag << 6
-				| this->no_effect << 5
+                | this->no_effect << 5
                 | this->break_command << 4
                 | this->decimal_mode << 3
                 | this->interrupt_disable << 2
@@ -75,8 +73,8 @@ namespace nes {
     
     std::ostream& operator<<(std::ostream& os, const registers& r);
 
-	static const uint16_t g_frame_irq_state_address = 0x4017;
-	static const uint16_t g_apu_state_address = 0x4015;
+    static const uint16_t g_frame_irq_state_address = 0x4017;
+    static const uint16_t g_apu_state_address = 0x4015;
     
     class cpu_6502 {
 
@@ -180,11 +178,11 @@ namespace nes {
         uint8_t eval();
         void run();
 
-		void toggle_frame_irq(uint8_t state = 0x00);
-		void toggle_apu(uint8_t state = 0x00);
-		void power_up();
+        void toggle_frame_irq(uint8_t state = 0x00);
+        void toggle_apu(uint8_t state = 0x00);
+        void power_up();
 
-		void reset();
+        void reset();
         
 
         void dissassembly(const uint8_t *buf, size_t size);

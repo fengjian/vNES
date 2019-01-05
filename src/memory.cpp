@@ -34,9 +34,9 @@ namespace nes {
         memset(this->internal_ram_addr_space_, 0, NES_MAX_RAM);
     }
 
-	void memory::bzero(uint16_t begin, uint16_t end)
-	{
-		memset(this->internal_ram_addr_space_ + begin, 0, end - begin);
-	}
+    void memory::bzero(uint16_t begin, uint16_t end)
+    {
+        memset(this->internal_ram_addr_space_ + begin, 0, end - begin);
+    }
 
 }
