@@ -58,6 +58,7 @@ namespace nes {
             {
                 return this->negative_flag << 7
                 | this->overflow_flag << 6
+				| this->no_effect << 5
                 | this->break_command << 4
                 | this->decimal_mode << 3
                 | this->interrupt_disable << 2
