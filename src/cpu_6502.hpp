@@ -137,8 +137,8 @@ namespace nes {
             this->set_zf(n);
         }
         
-		void reset_reg();
-		void reset_mem();
+        void reset_reg();
+        void reset_mem();
 
     public:
         cpu_6502() = delete;

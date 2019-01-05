@@ -31,7 +31,13 @@ namespace nes {
         address_offset code_segment_offset_{0x00, 0x00};
 
     public:
-        memory() noexcept :internal_ram_addr_space_(new(std::nothrow) uint8_t[NES_MAX_RAM]())
+        memory(const memory&) = delete;
+        memory(memory&&) = delete;
+        memory& operator=(const memory&) = delete;
+        memory& operator=(memory&&) = delete;
+
+        memory() noexcept 
+        :internal_ram_addr_space_(new(std::nothrow) uint8_t[NES_MAX_RAM]())
         {
 
         }
