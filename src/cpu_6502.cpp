@@ -234,21 +234,7 @@ namespace nes {
 
 
 
-/*
-	http://wiki.nesdev.com/w/index.php/CPU_power_up_state
-	CPU power up state
-	The following results are from a US (NTSC) NES, original front-loading design, RP2A03G CPU chip, NES-CPU-07 main board revision,
-	manufactured in 1988. The memory values are probably slightly different for each individual NES console.
-	Please note that you should NOT rely on the state of any registers after Power-UP and especially not the stack register and RAM ($0000-$07FF).
-	P = $34[1] (IRQ disabled)[2]
-	A, X, Y = 0
-	S = $FD
-	$4017 = $00 (frame irq enabled)
-	$4015 = $00 (all channels disabled)
-	$4000-$400F = $00 (not sure about $4010-$4013)
-	All 15 bits of noise channel LFSR = $0000[3]. The first time the LFSR is clocked from the all-0s state, it will shift in a 1.
-	Internal memory ($0000-$07FF) has unreliable startup state. Some machines may have consistent RAM contents at power-on, but others do not.
-*/
+
 
 
 
@@ -262,6 +248,22 @@ namespace nes {
 		this->mem_.write(state, g_apu_state_address);
 	}
 
+	/*
+		At power-up
+			http://wiki.nesdev.com/w/index.php/CPU_power_up_state
+			CPU power up state
+			The following results are from a US (NTSC) NES, original front-loading design, RP2A03G CPU chip, NES-CPU-07 main board revision,
+			manufactured in 1988. The memory values are probably slightly different for each individual NES console.
+			Please note that you should NOT rely on the state of any registers after Power-UP and especially not the stack register and RAM ($0000-$07FF).
+			P = $34[1] (IRQ disabled)[2]
+			A, X, Y = 0
+			S = $FD
+			$4017 = $00 (frame irq enabled)
+			$4015 = $00 (all channels disabled)
+			$4000-$400F = $00 (not sure about $4010-$4013)
+			All 15 bits of noise channel LFSR = $0000[3]. The first time the LFSR is clocked from the all-0s state, it will shift in a 1.
+			Internal memory ($0000-$07FF) has unreliable startup state. Some machines may have consistent RAM contents at power-on, but others do not.
+	*/
 
 	void cpu_6502::power_up()
 	{
@@ -289,13 +291,14 @@ namespace nes {
 	}
 
 /*
-	http://wiki.nesdev.com/w/index.php/CPU_power_up_state
-	A, X, Y were not affected
-	S was decremented by 3 (but nothing was written to the stack)
-	The I (IRQ disable) flag was set to true (status ORed with $04)
-	The internal memory was unchanged
-	APU mode in $4017 was unchanged
-	APU was silenced ($4015 = 0)
+	After reset
+
+		A, X, Y were not affected
+		S was decremented by 3 (but nothing was written to the stack)
+		The I (IRQ disable) flag was set to true (status ORed with $04)
+		The internal memory was unchanged
+		APU mode in $4017 was unchanged
+		APU was silenced ($4015 = 0)
 */
 	void cpu_6502::reset()
 	{
