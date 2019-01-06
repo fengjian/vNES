@@ -100,7 +100,9 @@ namespace nes {
         void indirect_addressing();
         void indirect_x_addressing();
         void indirect_y_addressing();
-        
+       
+        // transfer reg
+
         void TAX();
         void TAY();
         void TXA();
@@ -109,9 +111,14 @@ namespace nes {
         void TXS();
 
         
-        
+        // load && store
+
         void LDA();
+        void LDX();
+        void LDY();
         void STA();
+        void STX();
+        void STY();
 
 
         void INX();
@@ -180,6 +187,22 @@ namespace nes {
 
         void toggle_frame_irq(uint8_t state = 0x00);
         void toggle_apu(uint8_t state = 0x00);
+
+        template<typename T>
+        void push(T v)
+        {
+            this->mem_.write(v, g_stack_offset.start | this->reg_.SP);
+            this->reg_.SP -= sizeof(T);
+        }
+
+        template<typename T>
+        T pop()
+        {
+            this->reg_.SP += sizeof(T);
+            this->mem_.read<T>(g_stack_offset.start | this->reg_.SP);
+        }
+
+
         void power_up();
 
         void reset();

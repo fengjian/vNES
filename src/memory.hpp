@@ -22,12 +22,11 @@ namespace nes {
         uint16_t end;
     };
     
+    static const address_offset g_stack_offset = { 0x1ff, 0x100 };
     
     class memory {
         
         uint8_t *internal_ram_addr_space_{nullptr};
-        
-        address_offset stack_offset_{0x1ff, 0x100};
         address_offset code_segment_offset_{0x00, 0x00};
 
     public:
@@ -60,10 +59,6 @@ namespace nes {
             this->code_segment_offset_.end = end;
         }
 
-        const address_offset& get_stack_offset() const
-        {
-            return this->stack_offset_;
-        }
         
         uint8_t* map_offset_addr(uint16_t offset)
         {

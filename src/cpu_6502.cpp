@@ -153,15 +153,38 @@ namespace nes {
         this->set_nzf(this->reg_.A);
     }
 
+    // load && store
     void cpu_6502::LDA()
     {
         this->reg_.A = this->op_val_;
         this->set_nzf(this->reg_.A);
     }
+
+    void cpu_6502::LDX()
+    {
+        this->reg_.X = this->op_val_;
+        this->set_nzf(this->reg_.X);
+    }
+
+    void cpu_6502::LDY()
+    {
+        this->reg_.Y = this->op_val_;
+        this->set_nzf(this->reg_.Y);
+    }
     
     void cpu_6502::STA()
     {
         this->mem_.write(this->reg_.A, this->op_address_);
+    }
+
+    void cpu_6502::STX()
+    {
+        this->mem_.write(this->reg_.X, this->op_address_);
+    }
+
+    void cpu_6502::STY()
+    {
+        this->mem_.write(this->reg_.Y, this->op_address_);
     }
     
     void cpu_6502::load_code_segment(uint16_t segment_base_addr, const uint8_t *buf, size_t size)
@@ -276,12 +299,15 @@ namespace nes {
         this->reg_.Y = 0;
         this->reg_.SP = 0xfd;
 
+
         this->toggle_frame_irq(0x00);
         this->toggle_apu(0x00);
 
         this->mem_.bzero(0x4000, 0x400f + 1);
 
         //TODO init LSFR
+
+        this->reg_.PC = this->mem_.read<uint16_t>(0xfffc);
     }
 
 /*
@@ -299,6 +325,8 @@ namespace nes {
         this->reg_.SP -= 3;
         this->reg_.P.interrupt_disable = 1;
         this->toggle_apu();
+
+        this->reg_.PC = this->mem_.read<uint16_t>(0xfffc);
     }
     
     void cpu_6502::run()
@@ -316,7 +344,7 @@ namespace nes {
     void cpu_6502::reset_reg()
     {
         this->reg_.PC = this->mem_.get_code_segment_offset().start;
-        this->reg_.SP = this->mem_.get_stack_offset().start & 0xff; //low addr
+        this->reg_.SP = g_stack_offset.start & 0xff; //low addr
 
         memset(&this->reg_.P, 0, sizeof(this->reg_.P));
         this->reg_.A = 0;
