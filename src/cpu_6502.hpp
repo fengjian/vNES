@@ -120,6 +120,16 @@ namespace nes {
         void STX();
         void STY();
 
+        //flag clr && set
+
+        void CLC();
+        void CLI();
+        void CLD();
+        void CLV();
+        void SEC();
+        void SEI();
+        void SED();
+
 
         void INX();
         void ADC();
@@ -202,16 +212,12 @@ namespace nes {
             this->mem_.read<T>(g_stack_offset.start | this->reg_.SP);
         }
 
-
         void power_up();
-
         void reset();
-        
+        void interrupt();
 
         void dissassembly(const uint8_t *buf, size_t size);
-        
         void test();
-        
     };
 }
 
