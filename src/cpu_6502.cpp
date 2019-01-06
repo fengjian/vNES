@@ -276,8 +276,8 @@ namespace nes {
         this->reg_.Y = 0;
         this->reg_.SP = 0xfd;
 
-        this->toggle_frame_irq();
-        this->toggle_apu();
+        this->toggle_frame_irq(0x00);
+        this->toggle_apu(0x00);
 
         this->mem_.bzero(0x4000, 0x400f + 1);
 
