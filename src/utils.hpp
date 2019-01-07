@@ -49,7 +49,7 @@ static inline std::string to_binary_string(const T& x)
 
 
 template<typename T, size_t len>
-size_t arr_len(T(&)[len])
+static inline size_t arr_len(T(&)[len])
 {
     return len;
 }
