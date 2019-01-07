@@ -143,8 +143,26 @@ namespace nes {
     
     void cpu_6502::INX()
     {
-        this->reg_.X += 1;
+        this->reg_.X++;
         this->set_nzf(this->reg_.X);
+    }
+
+    void cpu_6502::INY()
+    {
+        this->reg_.Y++;
+        this->set_nzf(this->reg_.Y);
+    }
+
+    void cpu_6502::DEX()
+    {
+        this->reg_.X--;
+        this->set_nzf(this->reg_.X);
+    }
+
+    void cpu_6502::DEY()
+    {
+        this->reg_.Y--;
+        this->set_nzf(this->reg_.Y);
     }
     
     void cpu_6502::ADC()
@@ -185,6 +203,41 @@ namespace nes {
     void cpu_6502::STY()
     {
         this->mem_.write(this->reg_.Y, this->op_address_);
+    }
+
+    void cpu_6502::CLC()
+    {
+        this->reg_.P.carry_flag = 0;
+    }
+
+    void cpu_6502::CLI()
+    {
+        this->reg_.P.interrupt_disable = 0;
+    }
+
+    void cpu_6502::CLD()
+    {
+        this->reg_.P.decimal_mode = 0;
+    }
+
+    void cpu_6502::CLV()
+    {
+        this->reg_.P.overflow_flag = 0;
+    }
+
+    void cpu_6502::SEC()
+    {
+        this->reg_.P.carry_flag = 1;
+    }
+
+    void cpu_6502::SEI()
+    {
+        this->reg_.P.interrupt_disable = 1;
+    }
+
+    void cpu_6502::SED()
+    {
+        this->reg_.P.decimal_mode = 1;
     }
     
     void cpu_6502::load_code_segment(uint16_t segment_base_addr, const uint8_t *buf, size_t size)
@@ -327,6 +380,10 @@ namespace nes {
         this->toggle_apu();
 
         this->reg_.PC = this->mem_.read<uint16_t>(0xfffc);
+    }
+
+    void cpu_6502::interrupt()
+    {
     }
     
     void cpu_6502::run()

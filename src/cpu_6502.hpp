@@ -131,7 +131,18 @@ namespace nes {
         void SED();
 
 
+        //inc && dec
+
         void INX();
+        void INY();
+        void INC();
+
+
+        void DEX();
+        void DEY();
+        void DEC();
+
+
         void ADC();
         void BRK();
         
