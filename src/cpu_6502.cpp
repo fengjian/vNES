@@ -147,7 +147,11 @@ namespace nes {
 
     void cpu_6502::BRK()
     {
-        
+        this->push(this->reg_.PC - 1);
+        this->push(this->reg_.P);
+        this->reg_.P.no_effect = 1;
+        this->reg_.P.break_command = 1;
+        this->reg_.PC = this->mem_.read<uint16_t>(0xfffa);
     }
 
     void cpu_6502::TAX()
