@@ -14,7 +14,14 @@
 
 
 
-#define ERROR_UNKNOWN_INSTRUCTION -1
+#define FLAG_CARRY     (0x1)
+#define FLAG_ZERO      (0x1 << 1)
+#define FLAG_INTERRUPT (0x1 << 2)
+#define FLAG_DECIMAL   (0x1 << 3)
+#define FLAG_BREAK     (0x1 << 4)
+#define FLAG_EFFECT    (0x1 << 5)
+#define FLAG_OVERFLOW  (0x1 << 6)
+#define FLAG_NEGATIVE  (0x1 << 7)
 
 
 
@@ -42,6 +49,7 @@ namespace nes {
     |+-------- Overflow
     +--------- Negative
 */
+
         struct {
             uint8_t carry_flag : 1;
             uint8_t zero_flag : 1;
@@ -51,6 +59,18 @@ namespace nes {
             uint8_t no_effect : 1;
             uint8_t overflow_flag : 1;
             uint8_t negative_flag : 1;
+
+            void set_flag(uint8_t v)
+            {
+                this->carry_flag = v & 0x1;
+                this->zero_flag = v >> 1 & 0x1;
+                this->interrupt_disable = v >> 2 & 0x1;
+                this->decimal_mode = v >> 3 & 0x1;
+                this->break_command = v >> 4 & 0x1;
+                this->no_effect = v >> 5 & 0x1;
+                this->overflow_flag = v >> 6 & 0x1;
+                this->negative_flag = v >> 7 & 0x1;
+            }
 
             operator uint8_t() const
             {
@@ -84,9 +104,13 @@ namespace nes {
         
         uint8_t op_val_{0};
         uint16_t op_address_{0};
+
+        uint8_t add_cycles_{0};
         
         // addressing modes
         
+        void cross_page_cycles();
+
         void implied_addressing();
         void accumulator_addressing();
         void immediate_addressing();
@@ -143,7 +167,50 @@ namespace nes {
         void DEC();
 
 
+        //alu
+
+        void ORA();
+        void AND();
+        void EOR();
+        void ASL();
+        void ASLA();
+        void ROL();
+        void ROLA();
+        void ROR();
+        void RORA();
+        void LSR();
+        void LSRA();
         void ADC();
+        void SBC();
+       
+        //branching
+        void BMI();
+        void BCS();
+        void BEQ();
+        void BVS();
+        void BPL();
+        void BCC();
+        void BNE();
+        void BVC();
+
+        //cmp
+        void BIT();
+        void CMP();
+        void CPX();
+        void CPY();
+
+        //stack && jump
+        void PHA();
+        void PHP();
+        void PLA();
+        void PLP();
+        void RTS();
+        void RTI();
+        void JMP();
+        void JSR();
+
+
+        void NOP();
         void BRK();
         
         template<typename T>
@@ -203,7 +270,7 @@ namespace nes {
         }
         
                 
-        uint8_t eval();
+        uint8_t eval(int& cycles);
         void run();
 
         void toggle_frame_irq(uint8_t state = 0x00);
@@ -220,7 +287,7 @@ namespace nes {
         T pop()
         {
             this->reg_.SP += sizeof(T);
-            this->mem_.read<T>(g_stack_offset.start | this->reg_.SP);
+            return this->mem_.read<T>(g_stack_offset.start | this->reg_.SP);
         }
 
         void power_up();
